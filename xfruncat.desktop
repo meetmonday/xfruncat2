@@ -1,0 +1,8 @@
+[Xfce Panel]
+Type=X-XFCE-PanelPlugin
+Encoding=UTF-8
+Name=RunCat
+Comment=A running cat that speeds up with CPU load
+Icon=system-run
+X-XFCE-Module=xfruncat
+X-XFCE-API=2.0

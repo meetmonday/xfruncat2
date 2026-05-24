@@ -1,0 +1,12 @@
+build*/
+compile_commands.json
+.ninja_deps
+.ninja_log
+.ninja_timestamps
+*.o
+*.so
+meson-private
+meson-info
+meson-logs
+__pycache__
+*.pyc
