@@ -18,17 +18,29 @@ dnf install meson ninja-build gtk3-devel xfce4-panel-devel \
     libxfce4util-devel pango-devel xfconf-devel
 ```
 
+### Linux Mint
+
+```sh
+apt install meson ninja-build libgtk-3-dev libxfce4panel-2.0-dev \
+    libxfce4util-dev libpango1.0-dev libxfconf-0-dev libfontconfig-dev
+```
+
 ## Build
 
 ```sh
-meson setup build
+meson setup build --prefix=/usr
 ninja -C build
 ```
 
 ## Install
 
 ```sh
-ninja -C build install
+sudo ninja -C build install
+```
+
+After installing, restart the panel:
+```sh
+xfce4-panel -r
 ```
 
 ## License

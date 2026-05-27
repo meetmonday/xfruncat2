@@ -3,6 +3,9 @@
 #include <pango/pangocairo.h>
 #include <libxfce4panel/libxfce4panel.h>
 #include <xfconf/xfconf.h>
+#ifndef HAVE_PANGO_FONT_MAP_ADD_FONT_FILE
+#include <fontconfig/fontconfig.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -148,32 +151,48 @@ find_and_load_font(void)
     gchar *xdg_path = g_build_filename(g_get_user_data_dir(),
         "xfce4", "xfruncat", "polycat.ttf", NULL);
 
+#ifdef HAVE_PANGO_FONT_MAP_ADD_FONT_FILE
     PangoFontMap *fontmap = pango_cairo_font_map_get_default();
     GError *error = NULL;
+#else
+    FcConfig *config = FcConfigGetCurrent();
+#endif
 
     for (const gchar **p = paths; *p; p++)
     {
         if (g_file_test(*p, G_FILE_TEST_EXISTS))
         {
             g_debug("loading font from %s", *p);
+#ifdef HAVE_PANGO_FONT_MAP_ADD_FONT_FILE
             if (pango_font_map_add_font_file(fontmap, *p, &error))
+#else
+            if (FcConfigAppFontAddFile(config, (const FcChar8 *)*p))
+#endif
             {
                 g_free(xdg_path);
                 return TRUE;
             }
+#ifdef HAVE_PANGO_FONT_MAP_ADD_FONT_FILE
             g_clear_error(&error);
+#endif
         }
     }
 
     if (g_file_test(xdg_path, G_FILE_TEST_EXISTS))
     {
         g_debug("loading font from %s", xdg_path);
+#ifdef HAVE_PANGO_FONT_MAP_ADD_FONT_FILE
         if (pango_font_map_add_font_file(fontmap, xdg_path, &error))
+#else
+        if (FcConfigAppFontAddFile(config, (const FcChar8 *)xdg_path))
+#endif
         {
             g_free(xdg_path);
             return TRUE;
         }
+#ifdef HAVE_PANGO_FONT_MAP_ADD_FONT_FILE
         g_clear_error(&error);
+#endif
     }
 
     g_free(xdg_path);
