@@ -1,4 +1,4 @@
-# xfruncat — RunCat for Xfce
+# xfce4-runcat-plugin — RunCat for Xfce
 
 A running cat panel plugin for Xfce that speeds up with CPU load.
 
